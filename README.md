@@ -120,6 +120,27 @@ Access settings via Obsidian Settings > Banner Images:
 
 This plugin uses the `banner_image` frontmatter key by default. For compatibility with other banner plugins, it also reads the `backdrop` and `banner` fields.
 
+## Cross-Plugin API
+
+This plugin exposes its default settings so that other plugins (such as export tools) can read the user's configured defaults. The API is accessible via the standard Obsidian plugin registry pattern:
+
+```typescript
+// Access from another plugin
+const bannerPlugin = (app as any).plugins?.plugins?.["banner-images"];
+const defaults = bannerPlugin?.api?.getDefaults();
+```
+
+The `getDefaults()` method returns an object with the current default settings:
+
+| Property   | Type    | Description                                        |
+| ---------- | ------- | -------------------------------------------------- |
+| `height`   | number  | Default banner height in pixels                    |
+| `opacity`  | number  | Default opacity (0 to 1)                           |
+| `offset`   | string  | Default vertical position (e.g. "center", "30%")   |
+| `gradient` | boolean | Whether gradient transparency is enabled by default |
+
+If the banner-images plugin is not installed or not enabled, callers should provide their own fallback defaults. Always use optional chaining when accessing the API.
+
 ## License
 
 This plugin is released under the [MIT License](LICENSE).

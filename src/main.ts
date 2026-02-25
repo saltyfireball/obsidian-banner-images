@@ -41,6 +41,20 @@ interface BannerConfig {
 }
 
 // ---------------------------------------------------------------------------
+// Public API -- accessible by other plugins via app.plugins.plugins['banner-images']
+// ---------------------------------------------------------------------------
+
+export interface BannerImagesAPI {
+	/** Current default settings configured by the user. */
+	getDefaults(): {
+		height: number;
+		opacity: number;
+		offset: string;
+		gradient: boolean;
+	};
+}
+
+// ---------------------------------------------------------------------------
 // Plugin
 // ---------------------------------------------------------------------------
 
@@ -51,6 +65,16 @@ export default class BannerImagesPlugin extends Plugin {
 	private metadataHandler: ((file: TFile) => void) | null = null;
 	private renderDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 	private pendingRenderAll = false;
+
+	/** Public API for cross-plugin communication. */
+	api: BannerImagesAPI = {
+		getDefaults: () => ({
+			height: this.settings.defaultHeight,
+			opacity: this.settings.defaultOpacity,
+			offset: this.settings.defaultOffset,
+			gradient: this.settings.defaultGradient,
+		}),
+	};
 
 	async onload() {
 		await this.loadSettings();
