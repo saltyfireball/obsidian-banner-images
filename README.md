@@ -23,7 +23,7 @@ Display banner images at the top of your notes using frontmatter fields.
 
 ### From Obsidian Community Plugins
 
-**Might not be submitted yet**
+**Might not be approved yet**
 
 1. Open Obsidian Settings
 2. Go to Community Plugins and disable Safe Mode
@@ -132,11 +132,11 @@ const defaults = bannerPlugin?.api?.getDefaults();
 
 The `getDefaults()` method returns an object with the current default settings:
 
-| Property   | Type    | Description                                        |
-| ---------- | ------- | -------------------------------------------------- |
-| `height`   | number  | Default banner height in pixels                    |
-| `opacity`  | number  | Default opacity (0 to 1)                           |
-| `offset`   | string  | Default vertical position (e.g. "center", "30%")   |
+| Property   | Type    | Description                                         |
+| ---------- | ------- | --------------------------------------------------- |
+| `height`   | number  | Default banner height in pixels                     |
+| `opacity`  | number  | Default opacity (0 to 1)                            |
+| `offset`   | string  | Default vertical position (e.g. "center", "30%")    |
 | `gradient` | boolean | Whether gradient transparency is enabled by default |
 
 If the banner-images plugin is not installed or not enabled, callers should provide their own fallback defaults. Always use optional chaining when accessing the API.
