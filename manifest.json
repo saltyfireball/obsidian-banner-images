@@ -1,0 +1,9 @@
+{
+	"id": "banner-images",
+	"name": "Banner Images",
+	"version": "1.0.0",
+	"minAppVersion": "1.0.0",
+	"description": "Display banner images at the top of notes using frontmatter fields. Supports vault images, external URLs, custom height, opacity, vertical positioning, and gradient transparency.",
+	"author": "saltyfireball",
+	"isDesktopOnly": false
+}

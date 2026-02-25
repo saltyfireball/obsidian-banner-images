@@ -1,0 +1,215 @@
+/* ============================================================================
+   Banner Images Plugin
+   ============================================================================ */
+
+/* Banner container - injected at top of view */
+.bi-banner-container {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border-radius: 0;
+	overflow: hidden;
+	position: relative;
+	z-index: 1;
+	flex-shrink: 0;
+}
+
+.bi-banner {
+	width: 100%;
+	background-size: cover;
+	background-repeat: no-repeat;
+	transition: opacity 0.2s ease;
+}
+
+/* Banner inside preview view - make it full width */
+.markdown-preview-view > .bi-banner-container {
+	margin-left: calc(-1 * var(--file-margins, 20px));
+	margin-right: calc(-1 * var(--file-margins, 20px));
+	width: calc(100% + 2 * var(--file-margins, 20px));
+}
+
+/* Banner inside source view - make it full width */
+.markdown-source-view > .bi-banner-container {
+	margin-left: -5px;
+	margin-right: -5px;
+	width: calc(100% + 10px);
+}
+
+/* Source view with banner: make source-view the scroll container */
+.markdown-source-view.bi-has-banner-scroll {
+	overflow-y: auto !important;
+	overflow-x: hidden !important;
+	display: flex;
+	flex-direction: column;
+}
+
+/* When source view has banner scroll, cm-editor should not be the scroll container */
+.markdown-source-view.bi-has-banner-scroll .cm-editor {
+	overflow: visible !important;
+	flex: 1;
+	min-height: 0;
+}
+
+.markdown-source-view.bi-has-banner-scroll .cm-scroller {
+	overflow: visible !important;
+	height: auto !important;
+}
+
+/* Mobile: full width banners */
+.is-mobile .markdown-preview-view > .bi-banner-container,
+.is-mobile .markdown-source-view > .bi-banner-container {
+	margin-left: -16px;
+	margin-right: -16px;
+	width: calc(100% + 32px);
+	border-radius: 0;
+}
+
+/* ============================================================================
+   Settings UI
+   ============================================================================ */
+
+/* Slider value display */
+.bi-slider-value {
+	display: inline-block;
+	min-width: 2.5em;
+	text-align: center;
+	padding: 2px 8px;
+	margin-right: 8px;
+	background: var(--background-secondary);
+	border-radius: 4px;
+	font-size: 0.9em;
+	font-weight: 500;
+	color: var(--text-normal);
+	border: 1px solid var(--background-modifier-border);
+}
+
+/* Slider styling */
+.setting-item-control input[type="range"] {
+	width: 150px;
+	height: 6px;
+	-webkit-appearance: none;
+	appearance: none;
+	background: var(--background-modifier-border);
+	border-radius: 3px;
+	outline: none;
+	cursor: pointer;
+}
+
+.setting-item-control input[type="range"]::-webkit-slider-runnable-track {
+	height: 6px;
+	background: linear-gradient(
+		to right,
+		var(--interactive-accent) 0%,
+		var(--interactive-accent) var(--slider-progress, 50%),
+		var(--background-modifier-border) var(--slider-progress, 50%),
+		var(--background-modifier-border) 100%
+	);
+	border-radius: 3px;
+}
+
+.setting-item-control input[type="range"]::-moz-range-track {
+	height: 6px;
+	background: var(--background-modifier-border);
+	border-radius: 3px;
+}
+
+.setting-item-control input[type="range"]::-moz-range-progress {
+	height: 6px;
+	background: var(--interactive-accent);
+	border-radius: 3px;
+}
+
+.setting-item-control input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 16px;
+	height: 16px;
+	background: var(--interactive-accent);
+	border-radius: 50%;
+	cursor: pointer;
+	margin-top: -5px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.setting-item-control input[type="range"]::-moz-range-thumb {
+	width: 16px;
+	height: 16px;
+	background: var(--interactive-accent);
+	border-radius: 50%;
+	cursor: pointer;
+	border: none;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.setting-item-control input[type="range"]:hover::-webkit-slider-thumb {
+	background: var(--interactive-accent-hover);
+}
+
+.setting-item-control input[type="range"]:hover::-moz-range-thumb {
+	background: var(--interactive-accent-hover);
+}
+
+/* Banner status indicators in settings */
+.bi-banner-status {
+	margin-top: 1.5em;
+	padding: 12px 16px;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.bi-banner-enabled {
+	background: color-mix(
+		in srgb,
+		var(--text-success, #10b981) 15%,
+		var(--background-secondary)
+	);
+	border: 1px solid
+		color-mix(in srgb, var(--text-success, #10b981) 40%, transparent);
+}
+
+.bi-banner-enabled .bi-status-text {
+	color: var(--text-success, #10b981);
+	font-weight: 500;
+}
+
+.bi-banner-disabled {
+	background: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+}
+
+.bi-banner-disabled .bi-status-text {
+	color: var(--text-muted);
+}
+
+/* Code example in settings */
+.bi-code-example {
+	margin: 0.75em 0;
+	padding: 12px 16px;
+	background: var(--background-secondary);
+	border-radius: 6px;
+	border: 1px solid var(--background-modifier-border);
+	max-width: 500px;
+}
+
+.bi-code-example code {
+	font-family: var(--font-monospace);
+	font-size: 13px;
+	line-height: 1.6;
+	color: var(--text-normal);
+	white-space: pre;
+	display: block;
+}
+
+/* Print styles */
+@media print {
+	.bi-banner-container {
+		page-break-inside: avoid;
+	}
+
+	.bi-banner {
+		print-color-adjust: exact;
+		-webkit-print-color-adjust: exact;
+	}
+}
