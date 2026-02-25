@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-banner-images",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Display banner images at the top of notes based on frontmatter configuration.",
 	"main": "main.js",
 	"type": "module",
@@ -9,7 +9,13 @@
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json"
 	},
-	"keywords": ["obsidian", "plugin", "banner", "image", "frontmatter"],
+	"keywords": [
+		"obsidian",
+		"plugin",
+		"banner",
+		"image",
+		"frontmatter"
+	],
 	"license": "MIT",
 	"devDependencies": {
 		"@types/node": "^16.11.6",
