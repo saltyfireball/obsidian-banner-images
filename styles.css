@@ -16,9 +16,18 @@
 
 .bi-banner {
 	width: 100%;
+	background-image: var(--bi-bg-image);
+	height: var(--bi-height, 200px);
+	background-position: var(--bi-bg-position, center);
 	background-size: cover;
 	background-repeat: no-repeat;
+	opacity: var(--bi-opacity, 1);
 	transition: opacity 0.2s ease;
+}
+
+.bi-banner-gradient {
+	-webkit-mask-image: var(--bi-mask);
+	mask-image: var(--bi-mask);
 }
 
 /* Banner inside preview view - make it full width */

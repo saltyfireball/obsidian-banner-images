@@ -90,8 +90,9 @@ export default class BannerImagesPlugin extends Plugin {
 	}
 
 	async loadSettings() {
-		const saved = await this.loadData();
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, saved || {});
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- loadData returns any
+		const saved: Partial<BannerSettings> | null = await this.loadData();
+		this.settings = { ...DEFAULT_SETTINGS, ...(saved ?? {}) };
 	}
 
 	async saveSettings() {
@@ -122,10 +123,9 @@ export default class BannerImagesPlugin extends Plugin {
 		document.querySelectorAll(".bi-has-banner").forEach((el) => el.classList.remove("bi-has-banner"));
 		document.querySelectorAll(".bi-has-banner-scroll").forEach((el) => {
 			el.classList.remove("bi-has-banner-scroll");
-			const cmScroller = el.querySelector(".cm-scroller") as HTMLElement | null;
+			const cmScroller = el.querySelector<HTMLElement>(".cm-scroller");
 			if (cmScroller) {
-				cmScroller.style.overflow = "";
-				cmScroller.style.height = "";
+				cmScroller.setCssStyles({ overflow: "", height: "" });
 			}
 		});
 	}
@@ -223,17 +223,17 @@ export default class BannerImagesPlugin extends Plugin {
 		mode: "source" | "preview"
 	): { container: HTMLElement; insertBefore: Element | null } | null {
 		if (mode === "source") {
-			const sourceView = viewContent.querySelector(".markdown-source-view") as HTMLElement | null;
+			const sourceView = viewContent.querySelector<HTMLElement>(".markdown-source-view");
 			if (sourceView) {
 				sourceView.classList.add("bi-has-banner-scroll");
 				return { container: sourceView, insertBefore: sourceView.firstElementChild };
 			}
 		} else {
-			const previewView = viewContent.querySelector(".markdown-preview-view") as HTMLElement | null;
+			const previewView = viewContent.querySelector<HTMLElement>(".markdown-preview-view");
 			if (previewView) {
 				return { container: previewView, insertBefore: previewView.firstElementChild };
 			}
-			const readingView = viewContent.querySelector(".markdown-reading-view") as HTMLElement | null;
+			const readingView = viewContent.querySelector<HTMLElement>(".markdown-reading-view");
 			if (readingView) {
 				return { container: readingView, insertBefore: readingView.firstElementChild };
 			}
@@ -254,7 +254,7 @@ export default class BannerImagesPlugin extends Plugin {
 		const contentEl = view.containerEl;
 		if (!contentEl) return;
 
-		const viewContent = contentEl.querySelector(".view-content") as HTMLElement | null;
+		const viewContent = contentEl.querySelector<HTMLElement>(".view-content");
 		if (!viewContent) return;
 
 		// Remove existing banners from this view
@@ -264,13 +264,12 @@ export default class BannerImagesPlugin extends Plugin {
 
 		if (!config) {
 			viewContent.classList.remove("bi-has-banner");
-			const sourceView = viewContent.querySelector(".markdown-source-view") as HTMLElement | null;
+			const sourceView = viewContent.querySelector<HTMLElement>(".markdown-source-view");
 			if (sourceView) {
 				sourceView.classList.remove("bi-has-banner-scroll");
-				const cmScroller = sourceView.querySelector(".cm-scroller") as HTMLElement | null;
+				const cmScroller = sourceView.querySelector<HTMLElement>(".cm-scroller");
 				if (cmScroller) {
-					cmScroller.style.overflow = "";
-					cmScroller.style.height = "";
+					cmScroller.setCssStyles({ overflow: "", height: "" });
 				}
 			}
 			return;
@@ -298,10 +297,8 @@ export default class BannerImagesPlugin extends Plugin {
 		const frontmatter = cache?.frontmatter;
 		if (!frontmatter) return null;
 
-		const bannerImage =
-			frontmatter.banner_image ||
-			frontmatter.backdrop ||
-			frontmatter.banner;
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- frontmatter values are untyped
+		const bannerImage = frontmatter.banner_image || frontmatter.backdrop || frontmatter.banner;
 		if (!bannerImage) return null;
 
 		const height =
@@ -380,8 +377,8 @@ export default class BannerImagesPlugin extends Plugin {
 		if (file) return app.vault.getResourcePath(file);
 
 		const directFile = app.vault.getAbstractFileByPath(cleanPath);
-		if (directFile && "extension" in directFile) {
-			return app.vault.getResourcePath(directFile as TFile);
+		if (directFile instanceof TFile) {
+			return app.vault.getResourcePath(directFile);
 		}
 
 		return imagePath;
@@ -392,31 +389,24 @@ export default class BannerImagesPlugin extends Plugin {
 	// -------------------------------------------------------------------
 
 	private createBannerElement(config: BannerConfig, imageUrl: string): HTMLElement {
-		const container = document.createElement("div");
-		container.className = "bi-banner-container";
-
-		const banner = document.createElement("div");
-		banner.className = "bi-banner";
-		banner.style.backgroundImage = `url("${imageUrl}")`;
-		banner.style.height = `${config.height}px`;
-		banner.style.backgroundPosition = `center ${config.offset}`;
+		const container = createDiv({ cls: "bi-banner-container" });
+		const banner = container.createDiv({ cls: "bi-banner" });
+		banner.setCssProps({
+			"--bi-bg-image": `url("${imageUrl}")`,
+			"--bi-height": `${config.height}px`,
+			"--bi-bg-position": `center ${config.offset}`,
+		});
 
 		if (config.gradient) {
-			banner.style.opacity = "1";
-			banner.style.setProperty(
-				"-webkit-mask-image",
-				`linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,${config.opacity}) 100%)`
-			);
-			banner.style.setProperty(
-				"mask-image",
-				`linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,${config.opacity}) 100%)`
-			);
+			banner.setCssProps({
+				"--bi-opacity": "1",
+				"--bi-mask": `linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,${config.opacity}) 100%)`,
+			});
 			banner.classList.add("bi-banner-gradient");
 		} else {
-			banner.style.opacity = String(config.opacity);
+			banner.setCssProps({ "--bi-opacity": String(config.opacity) });
 		}
 
-		container.appendChild(banner);
 		return container;
 	}
 }
@@ -447,7 +437,6 @@ class BannerSettingTab extends PluginSettingTab {
 		const { containerEl } = this;
 		containerEl.empty();
 
-		new Setting(containerEl).setName("Banner images").setHeading();
 		containerEl.createEl("p", {
 			text: "Display banner images at the top of notes based on frontmatter configuration.",
 			cls: "setting-item-description",
@@ -532,7 +521,7 @@ class BannerSettingTab extends PluginSettingTab {
 			.setDesc("Default vertical position of the image. Use 'top', 'center', 'bottom', or a percentage (0% = top, 100% = bottom).")
 			.addText((text) =>
 				text
-					.setPlaceholder("center")
+					.setPlaceholder("Center")
 					.setValue(settings.defaultOffset)
 					.onChange(async (value) => {
 						settings.defaultOffset = value.trim() || "center";
@@ -548,13 +537,8 @@ class BannerSettingTab extends PluginSettingTab {
 		});
 
 		const codeExample = containerEl.createDiv({ cls: "bi-code-example" });
-		codeExample.innerHTML = `<code>---
-banner_image: path/to/image.png
-banner_height: 250
-banner_opacity: 0.8
-banner_offset: 20%
-banner_gradient: true
----</code>`;
+		const codeEl = codeExample.createEl("code");
+		codeEl.setText("---\nbanner_image: path/to/image.png\nbanner_height: 250\nbanner_opacity: 0.8\nbanner_offset: 20%\nbanner_gradient: true\n---");
 
 		// Field descriptions
 		new Setting(containerEl).setName("Available fields").setHeading();
@@ -590,7 +574,7 @@ banner_gradient: true
 		});
 
 		containerEl.createEl("p", {
-			text: "Tip: You can use 'backdrop:' instead of 'banner_image:' for compatibility with other plugins.",
+			text: "You can use 'backdrop:' instead of 'banner_image:' for compatibility with other plugins.",
 			cls: "setting-item-description",
 		});
 
