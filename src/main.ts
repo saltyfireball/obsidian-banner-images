@@ -447,7 +447,7 @@ class BannerSettingTab extends PluginSettingTab {
 		const { containerEl } = this;
 		containerEl.empty();
 
-		containerEl.createEl("h2", { text: "Banner Images" });
+		new Setting(containerEl).setName("Banner images").setHeading();
 		containerEl.createEl("p", {
 			text: "Display banner images at the top of notes based on frontmatter configuration.",
 			cls: "setting-item-description",
@@ -541,7 +541,7 @@ class BannerSettingTab extends PluginSettingTab {
 			);
 
 		// Usage instructions
-		containerEl.createEl("h3", { text: "Frontmatter Reference" });
+		new Setting(containerEl).setName("Frontmatter reference").setHeading();
 		containerEl.createEl("p", {
 			text: "Add these fields to your note's frontmatter to display and customize a banner:",
 			cls: "setting-item-description",
@@ -557,7 +557,7 @@ banner_gradient: true
 ---</code>`;
 
 		// Field descriptions
-		containerEl.createEl("h4", { text: "Available Fields" });
+		new Setting(containerEl).setName("Available fields").setHeading();
 		const fieldsList = containerEl.createEl("ul");
 
 		const fields = [
@@ -575,7 +575,7 @@ banner_gradient: true
 		});
 
 		// Supported formats
-		containerEl.createEl("h3", { text: "Supported Image Formats" });
+		new Setting(containerEl).setName("Supported image formats").setHeading();
 		const formatsList = containerEl.createEl("ul");
 
 		const formats = [
