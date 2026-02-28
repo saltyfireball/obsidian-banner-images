@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-banner-images",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"description": "Display banner images at the top of notes based on frontmatter configuration.",
 	"main": "main.js",
 	"type": "module",
