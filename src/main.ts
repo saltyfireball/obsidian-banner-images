@@ -90,8 +90,7 @@ export default class BannerImagesPlugin extends Plugin {
 	}
 
 	async loadSettings() {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- loadData returns any
-		const saved: Partial<BannerSettings> | null = await this.loadData();
+		const saved = (await this.loadData()) as Partial<BannerSettings> | null;
 		this.settings = { ...DEFAULT_SETTINGS, ...(saved ?? {}) };
 	}
 
@@ -297,9 +296,9 @@ export default class BannerImagesPlugin extends Plugin {
 		const frontmatter = cache?.frontmatter;
 		if (!frontmatter) return null;
 
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- frontmatter values are untyped
-		const bannerImage = frontmatter.banner_image || frontmatter.backdrop || frontmatter.banner;
-		if (!bannerImage) return null;
+		const bannerRaw: unknown = frontmatter.banner_image || frontmatter.backdrop || frontmatter.banner;
+		if (!bannerRaw || typeof bannerRaw !== "string") return null;
+		const bannerImage: string = bannerRaw;
 
 		const height =
 			typeof frontmatter.banner_height === "number"
@@ -321,7 +320,7 @@ export default class BannerImagesPlugin extends Plugin {
 			this.settings.defaultGradient
 		);
 
-		return { image: String(bannerImage), height, opacity, offset, gradient };
+		return { image: bannerImage, height, opacity, offset, gradient };
 	}
 
 	private parseGradient(value: unknown, defaultValue: boolean): boolean {
