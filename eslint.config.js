@@ -24,6 +24,7 @@ export default defineConfig([
     },
     rules: {
       "obsidianmd/sample-names": "off",
+      "@typescript-eslint/require-await": "error",
     },
   },
 ]);
