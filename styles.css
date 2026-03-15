@@ -60,7 +60,8 @@
 }
 
 .markdown-source-view.bi-has-banner-scroll .cm-scroller {
-	overflow: visible !important;
+	overflow-y: visible !important;
+	overflow-x: auto !important;
 	height: auto !important;
 }
 
