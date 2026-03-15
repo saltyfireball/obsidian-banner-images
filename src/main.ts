@@ -609,7 +609,7 @@ class BannerSettingTab extends PluginSettingTab {
 			text: "Copy",
 		});
 		copyBtn.addEventListener("click", () => {
-			navigator.clipboard.writeText(exampleText).then(() => {
+			void window.navigator.clipboard.writeText(exampleText).then(() => {
 				copyBtn.setText("Copied!");
 				setTimeout(() => copyBtn.setText("Copy"), 2000);
 			});
