@@ -1,6 +1,8 @@
 import {
 	App,
+	Editor,
 	MarkdownView,
+	Notice,
 	Plugin,
 	PluginSettingTab,
 	Setting,
@@ -80,6 +82,14 @@ export default class BannerImagesPlugin extends Plugin {
 		await this.loadSettings();
 		this.addSettingTab(new BannerSettingTab(this.app, this));
 
+		this.addCommand({
+			id: "insert-banner-frontmatter",
+			name: "Insert banner frontmatter",
+			editorCallback: (editor: Editor) => {
+				this.insertBannerFrontmatter(editor);
+			},
+		});
+
 		if (this.settings.enabled) {
 			this.startBanners();
 		}
@@ -96,6 +106,59 @@ export default class BannerImagesPlugin extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
+	}
+
+	// -------------------------------------------------------------------
+	// Frontmatter insertion
+	// -------------------------------------------------------------------
+
+	private insertBannerFrontmatter(editor: Editor): void {
+		const bannerKeys = [
+			"banner_image",
+			"banner_height",
+			"banner_opacity",
+			"banner_offset",
+			"banner_gradient",
+		];
+
+		const content = editor.getValue();
+		const hasFrontmatter =
+			content.startsWith("---\n") || content.startsWith("---\r\n");
+
+		if (hasFrontmatter) {
+			const endMatch = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+			if (!endMatch) {
+				new Notice("Could not parse existing frontmatter");
+				return;
+			}
+
+			const existing = endMatch[1];
+			const missingKeys = bannerKeys.filter(
+				(key) => !new RegExp(`^${key}\\s*:`, "m").test(existing)
+			);
+
+			if (missingKeys.length === 0) {
+				new Notice("Banner frontmatter already exists");
+				return;
+			}
+
+			const insertion = missingKeys
+				.map((key) => `${key}: `)
+				.join("\n");
+
+			// Insert before the closing ---
+			const endIndex = content.indexOf("\n---", 4);
+			const insertPos = editor.offsetToPos(endIndex);
+			editor.replaceRange("\n" + insertion, insertPos);
+			new Notice(`Inserted ${missingKeys.length} banner field(s)`);
+		} else {
+			const block =
+				"---\n" +
+				bannerKeys.map((key) => `${key}: `).join("\n") +
+				"\n---\n";
+			editor.replaceRange(block, { line: 0, ch: 0 });
+			new Notice("Inserted banner frontmatter");
+		}
 	}
 
 	// -------------------------------------------------------------------
@@ -535,9 +598,22 @@ class BannerSettingTab extends PluginSettingTab {
 			cls: "setting-item-description",
 		});
 
-		const codeExample = containerEl.createDiv({ cls: "bi-code-example" });
+		const codeWrapper = containerEl.createDiv({ cls: "bi-code-wrapper" });
+		const codeExample = codeWrapper.createDiv({ cls: "bi-code-example" });
 		const codeEl = codeExample.createEl("code");
-		codeEl.setText("---\nbanner_image: path/to/image.png\nbanner_height: 250\nbanner_opacity: 0.8\nbanner_offset: 20%\nbanner_gradient: true\n---");
+		const exampleText = "---\nbanner_image: path/to/image.png\nbanner_height: 250\nbanner_opacity: 0.8\nbanner_offset: 20%\nbanner_gradient: true\n---";
+		codeEl.setText(exampleText);
+
+		const copyBtn = codeWrapper.createEl("button", {
+			cls: "bi-copy-button",
+			text: "Copy",
+		});
+		copyBtn.addEventListener("click", () => {
+			navigator.clipboard.writeText(exampleText).then(() => {
+				copyBtn.setText("Copied!");
+				setTimeout(() => copyBtn.setText("Copy"), 2000);
+			});
+		});
 
 		// Field descriptions
 		new Setting(containerEl).setName("Available fields").setHeading();

@@ -193,13 +193,17 @@
 }
 
 /* Code example in settings */
-.bi-code-example {
+.bi-code-wrapper {
+	position: relative;
+	max-width: 500px;
 	margin: 0.75em 0;
+}
+
+.bi-code-example {
 	padding: 12px 16px;
 	background: var(--background-secondary);
 	border-radius: 6px;
 	border: 1px solid var(--background-modifier-border);
-	max-width: 500px;
 }
 
 .bi-code-example code {
@@ -209,6 +213,25 @@
 	color: var(--text-normal);
 	white-space: pre;
 	display: block;
+}
+
+.bi-copy-button {
+	position: absolute;
+	top: 6px;
+	right: 6px;
+	padding: 2px 10px;
+	font-size: 12px;
+	cursor: pointer;
+	background: var(--background-primary);
+	color: var(--text-muted);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 4px;
+	transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.bi-copy-button:hover {
+	color: var(--text-normal);
+	border-color: var(--text-muted);
 }
 
 /* Print styles */
