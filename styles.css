@@ -19,7 +19,7 @@
 	background-image: var(--bi-bg-image);
 	height: var(--bi-height, 200px);
 	background-position: var(--bi-bg-position, center);
-	background-size: cover;
+	background-size: var(--bi-bg-size, cover);
 	background-repeat: no-repeat;
 	opacity: var(--bi-opacity, 1);
 	transition: opacity 0.2s ease;

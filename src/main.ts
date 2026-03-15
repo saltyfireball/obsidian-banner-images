@@ -14,12 +14,15 @@ import {
 // Settings
 // ---------------------------------------------------------------------------
 
+type BannerFit = "none" | "fit_height" | "fit_width";
+
 interface BannerSettings {
 	enabled: boolean;
 	defaultHeight: number;
 	defaultOpacity: number;
 	defaultOffset: string;
 	defaultGradient: boolean;
+	defaultFit: BannerFit;
 }
 
 const DEFAULT_SETTINGS: BannerSettings = {
@@ -28,6 +31,7 @@ const DEFAULT_SETTINGS: BannerSettings = {
 	defaultOpacity: 1,
 	defaultOffset: "center",
 	defaultGradient: false,
+	defaultFit: "none",
 };
 
 // ---------------------------------------------------------------------------
@@ -40,6 +44,7 @@ interface BannerConfig {
 	opacity: number;
 	offset: string;
 	gradient: boolean;
+	fit: BannerFit;
 }
 
 // ---------------------------------------------------------------------------
@@ -53,6 +58,7 @@ export interface BannerImagesAPI {
 		opacity: number;
 		offset: string;
 		gradient: boolean;
+		fit: BannerFit;
 	};
 }
 
@@ -75,6 +81,7 @@ export default class BannerImagesPlugin extends Plugin {
 			opacity: this.settings.defaultOpacity,
 			offset: this.settings.defaultOffset,
 			gradient: this.settings.defaultGradient,
+			fit: this.settings.defaultFit,
 		}),
 	};
 
@@ -119,6 +126,7 @@ export default class BannerImagesPlugin extends Plugin {
 			"banner_opacity",
 			"banner_offset",
 			"banner_gradient",
+			"banner_fit",
 		];
 
 		const content = editor.getValue();
@@ -383,7 +391,12 @@ export default class BannerImagesPlugin extends Plugin {
 			this.settings.defaultGradient
 		);
 
-		return { image: bannerImage, height, opacity, offset, gradient };
+		const fit = this.parseFit(
+			frontmatter.banner_fit,
+			this.settings.defaultFit
+		);
+
+		return { image: bannerImage, height, opacity, offset, gradient, fit };
 	}
 
 	private parseGradient(value: unknown, defaultValue: boolean): boolean {
@@ -420,6 +433,17 @@ export default class BannerImagesPlugin extends Plugin {
 		return defaultValue;
 	}
 
+	private parseFit(value: unknown, defaultValue: BannerFit): BannerFit {
+		if (value === undefined || value === null) return defaultValue;
+		if (typeof value === "string") {
+			const lower = value.toLowerCase().trim();
+			if (lower === "fit_height" || lower === "fit_width" || lower === "none") {
+				return lower;
+			}
+		}
+		return defaultValue;
+	}
+
 	// -------------------------------------------------------------------
 	// Image URL resolution
 	// -------------------------------------------------------------------
@@ -453,10 +477,22 @@ export default class BannerImagesPlugin extends Plugin {
 	private createBannerElement(config: BannerConfig, imageUrl: string): HTMLElement {
 		const container = createDiv({ cls: "bi-banner-container" });
 		const banner = container.createDiv({ cls: "bi-banner" });
+
+		let bgSize = "cover";
+		let bgPosition = `center ${config.offset}`;
+		if (config.fit === "fit_height") {
+			bgSize = "auto 100%";
+			bgPosition = "center center";
+		} else if (config.fit === "fit_width") {
+			bgSize = "100% auto";
+			bgPosition = `center ${config.offset}`;
+		}
+
 		banner.setCssProps({
 			"--bi-bg-image": `url("${imageUrl}")`,
 			"--bi-height": `${config.height}px`,
-			"--bi-bg-position": `center ${config.offset}`,
+			"--bi-bg-position": bgPosition,
+			"--bi-bg-size": bgSize,
 		});
 
 		if (config.gradient) {
@@ -591,6 +627,22 @@ class BannerSettingTab extends PluginSettingTab {
 					})
 			);
 
+		// Default fit mode
+		new Setting(containerEl)
+			.setName("Default fit mode")
+			.setDesc("How the image fits the banner area. 'none' fills and crops (cover). 'fit_height' shows the full image height. 'fit_width' shows the full image width.")
+			.addDropdown((dropdown) =>
+				dropdown
+					.addOption("none", "None (cover)")
+					.addOption("fit_height", "Fit height")
+					.addOption("fit_width", "Fit width")
+					.setValue(settings.defaultFit)
+					.onChange(async (value) => {
+						settings.defaultFit = value as BannerFit;
+						await this.plugin.saveSettings();
+					})
+			);
+
 		// Usage instructions
 		new Setting(containerEl).setName("Frontmatter reference").setHeading();
 		containerEl.createEl("p", {
@@ -601,7 +653,7 @@ class BannerSettingTab extends PluginSettingTab {
 		const codeWrapper = containerEl.createDiv({ cls: "bi-code-wrapper" });
 		const codeExample = codeWrapper.createDiv({ cls: "bi-code-example" });
 		const codeEl = codeExample.createEl("code");
-		const exampleText = "---\nbanner_image: path/to/image.png\nbanner_height: 250\nbanner_opacity: 0.8\nbanner_offset: 20%\nbanner_gradient: true\n---";
+		const exampleText = "---\nbanner_image: path/to/image.png\nbanner_height: 250\nbanner_opacity: 0.8\nbanner_offset: 20%\nbanner_gradient: true\nbanner_fit: none\n---";
 		codeEl.setText(exampleText);
 
 		const copyBtn = codeWrapper.createEl("button", {
@@ -625,6 +677,7 @@ class BannerSettingTab extends PluginSettingTab {
 			{ field: "banner_opacity", desc: "Opacity from 0 to 1 (default: from settings)" },
 			{ field: "banner_offset", desc: "Vertical position: top, center, bottom, or percentage like 20%" },
 			{ field: "banner_gradient", desc: "true/false - Fade from top to bottom using the opacity value" },
+			{ field: "banner_fit", desc: "none, fit_height, or fit_width - How the image fits the banner area" },
 		];
 
 		fields.forEach(({ field, desc }) => {

@@ -15,7 +15,9 @@ Display banner images at the top of your notes using frontmatter fields.
 - **Customizable height** -- Set banner height globally or per-note via frontmatter
 - **Opacity control** -- Adjust banner transparency globally or per-note
 - **Vertical positioning** -- Control which part of the image is shown (top, center, bottom, or percentage)
+- **Fit modes** -- Choose how the image fills the banner: cover (default), fit to height, or fit to width
 - **Gradient transparency** -- Smooth fade from full opacity at the top to your chosen opacity at the bottom
+- **Command palette** -- Insert banner frontmatter into any note via the command palette
 - **Works in all views** -- Renders in both Reading View and Live Preview/Source mode
 - **Mobile support** -- Full-width banners on mobile devices
 
@@ -42,13 +44,15 @@ Display banner images at the top of your notes using frontmatter fields.
 ### Quick Start
 
 1. Enable the plugin in settings
-2. Add `banner_image` to your note's frontmatter:
+2. Add `banner_image` to your note's frontmatter manually, or use the command palette (`Ctrl/Cmd+P`) and run **Banner Images: Insert banner frontmatter** to insert all available fields automatically:
 
 ```yaml
 ---
 banner_image: path/to/your/image.png
 ---
 ```
+
+The command will add only missing banner fields if frontmatter already exists.
 
 ### Frontmatter Fields
 
@@ -59,6 +63,7 @@ banner_image: path/to/your/image.png
 | `banner_opacity`  | number        | 1       | Opacity from 0 (transparent) to 1 (fully visible)                                 |
 | `banner_offset`   | string/number | center  | Vertical position: `top`, `center`, `bottom`, or a percentage like `20%`          |
 | `banner_gradient` | boolean       | false   | When true, fades from full opacity at top to selected opacity at bottom           |
+| `banner_fit`      | string        | none    | Image fit mode: `none` (cover), `fit_height`, or `fit_width`                     |
 
 ### Examples
 
@@ -79,6 +84,7 @@ banner_height: 300
 banner_opacity: 0.7
 banner_offset: 30%
 banner_gradient: true
+banner_fit: fit_width
 ---
 ```
 
@@ -99,6 +105,14 @@ banner_image: "[[my-banner.png]]"
 ---
 ```
 
+### Fit Modes
+
+The `banner_fit` field controls how the image is sized within the banner area:
+
+- **`none`** (default) -- The image covers the entire banner area. Parts of the image may be cropped to fill the space.
+- **`fit_height`** -- The image scales so its full height is visible within `banner_height`. The image is centered horizontally, and the sides may be cropped if the image is wider than the banner area.
+- **`fit_width`** -- The image scales so its full width matches the banner width. Resizing the window effectively zooms in or out. The top/bottom may be cropped based on `banner_offset`.
+
 ### Supported Image Formats
 
 - Vault-relative paths: `attachments/banner.png`
@@ -115,6 +129,7 @@ Access settings via Obsidian Settings > Banner Images:
 - **Default opacity** -- Default transparency level (used when `banner_opacity` is not set)
 - **Gradient transparency** -- Enable gradient fade by default
 - **Default vertical position** -- Default image positioning (used when `banner_offset` is not set)
+- **Default fit mode** -- Default image fit behavior (used when `banner_fit` is not set)
 
 ## Compatibility
 
@@ -132,12 +147,13 @@ const defaults = bannerPlugin?.api?.getDefaults();
 
 The `getDefaults()` method returns an object with the current default settings:
 
-| Property   | Type    | Description                                         |
-| ---------- | ------- | --------------------------------------------------- |
-| `height`   | number  | Default banner height in pixels                     |
-| `opacity`  | number  | Default opacity (0 to 1)                            |
-| `offset`   | string  | Default vertical position (e.g. "center", "30%")    |
-| `gradient` | boolean | Whether gradient transparency is enabled by default |
+| Property   | Type    | Description                                              |
+| ---------- | ------- | -------------------------------------------------------- |
+| `height`   | number  | Default banner height in pixels                          |
+| `opacity`  | number  | Default opacity (0 to 1)                                 |
+| `offset`   | string  | Default vertical position (e.g. "center", "30%")         |
+| `gradient` | boolean | Whether gradient transparency is enabled by default      |
+| `fit`      | string  | Default fit mode ("none", "fit_height", or "fit_width")  |
 
 If the banner-images plugin is not installed or not enabled, callers should provide their own fallback defaults. Always use optional chaining when accessing the API.
 
