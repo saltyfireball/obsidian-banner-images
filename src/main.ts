@@ -232,8 +232,14 @@ export default class BannerImagesPlugin extends Plugin {
 		});
 		this.registerEvent(fileOpenRef);
 
+		let lastMode: string | null = null;
 		const layoutRef = this.app.workspace.on("layout-change", () => {
-			this.debouncedRender(true);
+			const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+			const mode = view?.getMode() ?? null;
+			if (mode !== lastMode) {
+				lastMode = mode;
+				this.debouncedRender();
+			}
 		});
 		this.registerEvent(layoutRef);
 
@@ -327,10 +333,18 @@ export default class BannerImagesPlugin extends Plugin {
 		const viewContent = contentEl.querySelector<HTMLElement>(".view-content");
 		if (!viewContent) return;
 
+		const config = this.getBannerConfig(this.app, file);
+		const mode = mdView.getMode();
+		const configKey = config ? `${mode}:${JSON.stringify(config)}` : "";
+		const existingBanner = contentEl.querySelector<HTMLElement>(".bi-banner-container");
+
+		// Skip if banner already matches current config and mode
+		if (existingBanner && existingBanner.dataset.biConfig === configKey && configKey) {
+			return;
+		}
+
 		// Remove existing banners from this view
 		contentEl.querySelectorAll(".bi-banner-container").forEach((el) => el.remove());
-
-		const config = this.getBannerConfig(this.app, file);
 
 		if (!config) {
 			viewContent.classList.remove("bi-has-banner");
@@ -348,11 +362,11 @@ export default class BannerImagesPlugin extends Plugin {
 		viewContent.classList.add("bi-has-banner");
 
 		const imageUrl = this.resolveImageUrl(this.app, config.image, file.path);
-		const mode = mdView.getMode();
 		const insertPoint = this.findBannerInsertPoint(viewContent, mode);
 		if (!insertPoint) return;
 
 		const bannerEl = this.createBannerElement(config, imageUrl);
+		bannerEl.dataset.biConfig = configKey;
 		insertPoint.container.insertBefore(bannerEl, insertPoint.insertBefore);
 	}
 
