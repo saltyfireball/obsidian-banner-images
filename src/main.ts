@@ -469,6 +469,12 @@ export default class BannerImagesPlugin extends Plugin {
 		if (imagePath.startsWith("data:")) return imagePath;
 
 		let cleanPath = imagePath;
+		// Decode URL-encoded paths (e.g. %20 -> space)
+		try {
+			cleanPath = decodeURIComponent(cleanPath);
+		} catch {
+			// ignore invalid encoding
+		}
 		if (cleanPath.startsWith("[[") && cleanPath.endsWith("]]")) {
 			cleanPath = cleanPath.slice(2, -2);
 		}
