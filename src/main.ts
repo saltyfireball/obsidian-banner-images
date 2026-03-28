@@ -451,9 +451,9 @@ export default class BannerImagesPlugin extends Plugin {
 		if (value === undefined || value === null) return defaultValue;
 		if (typeof value === "string") {
 			const lower = value.toLowerCase().trim();
-			if (lower === "fit_height" || lower === "fit_width" || lower === "none") {
-				return lower;
-			}
+			if (lower === "fit_height" || lower === "height") return "fit_height";
+			if (lower === "fit_width" || lower === "width") return "fit_width";
+			if (lower === "none") return "none";
 		}
 		return defaultValue;
 	}
