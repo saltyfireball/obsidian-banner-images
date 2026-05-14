@@ -71,7 +71,7 @@ export default class BannerImagesPlugin extends Plugin {
 	private active = false;
 	private eventRefs: Array<() => void> = [];
 	private metadataHandler: ((file: TFile) => void) | null = null;
-	private renderDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+	private renderDebounceTimer: number | null = null;
 	private pendingRenderAll = false;
 
 	/** Public API for cross-plugin communication. */
@@ -185,13 +185,13 @@ export default class BannerImagesPlugin extends Plugin {
 		this.active = false;
 		this.unregisterBannerEvents();
 		if (this.renderDebounceTimer) {
-			clearTimeout(this.renderDebounceTimer);
+			activeWindow.clearTimeout(this.renderDebounceTimer);
 			this.renderDebounceTimer = null;
 		}
 		// Remove all existing banners and classes
-		document.querySelectorAll(".bi-banner-container").forEach((el) => el.remove());
-		document.querySelectorAll(".bi-has-banner").forEach((el) => el.classList.remove("bi-has-banner"));
-		document.querySelectorAll(".bi-has-banner-scroll").forEach((el) => {
+		activeDocument.querySelectorAll(".bi-banner-container").forEach((el) => el.remove());
+		activeDocument.querySelectorAll(".bi-has-banner").forEach((el) => el.classList.remove("bi-has-banner"));
+		activeDocument.querySelectorAll(".bi-has-banner-scroll").forEach((el) => {
 			el.classList.remove("bi-has-banner-scroll");
 			const cmScroller = el.querySelector<HTMLElement>(".cm-scroller");
 			if (cmScroller) {
@@ -209,9 +209,9 @@ export default class BannerImagesPlugin extends Plugin {
 			this.pendingRenderAll = true;
 		}
 		if (this.renderDebounceTimer) {
-			clearTimeout(this.renderDebounceTimer);
+			activeWindow.clearTimeout(this.renderDebounceTimer);
 		}
-		this.renderDebounceTimer = setTimeout(() => {
+		this.renderDebounceTimer = activeWindow.setTimeout(() => {
 			this.renderDebounceTimer = null;
 			if (this.pendingRenderAll) {
 				this.pendingRenderAll = false;
@@ -683,7 +683,7 @@ class BannerSettingTab extends PluginSettingTab {
 		copyBtn.addEventListener("click", () => {
 			void window.navigator.clipboard.writeText(exampleText).then(() => {
 				copyBtn.setText("Copied!");
-				setTimeout(() => copyBtn.setText("Copy"), 2000);
+				activeWindow.setTimeout(() => copyBtn.setText("Copy"), 2000);
 			});
 		});
 
@@ -729,10 +729,10 @@ class BannerSettingTab extends PluginSettingTab {
 		// Status indicator
 		if (settings.enabled) {
 			const statusEl = containerEl.createDiv("bi-banner-status bi-banner-enabled");
-			statusEl.createEl("span", { text: "Banner images are active", cls: "bi-status-text" });
+			statusEl.createSpan({ text: "Banner images are active", cls: "bi-status-text" });
 		} else {
 			const statusEl = containerEl.createDiv("bi-banner-status bi-banner-disabled");
-			statusEl.createEl("span", { text: "Banner images are disabled", cls: "bi-status-text" });
+			statusEl.createSpan({ text: "Banner images are disabled", cls: "bi-status-text" });
 		}
 	}
 }

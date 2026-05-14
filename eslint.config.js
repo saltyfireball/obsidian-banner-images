@@ -20,6 +20,9 @@ export default defineConfig([
         createSpan: "readonly",
         createFragment: "readonly",
         activeDocument: "readonly",
+        activeWindow: "readonly",
+        requestAnimationFrame: "readonly",
+        navigator: "readonly",
       },
     },
     rules: {

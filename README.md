@@ -1,6 +1,6 @@
 # Banner Images for Obsidian
 
-![works on my machine](https://img.shields.io/badge/worksonmymachien-on%20my%20machine-fff?style=flat&logo=apple&logoColor=FFFFFF&logoSize=FF6188&label=works&labelColor=5B595C&color=A9DC76) ![Cache](https://img.shields.io/badge/cache-have%20you%20cleared%20it-fff?style=flat&logo=cachet&logoColor=FFFFFF&label=cache&labelColor=5B595C&color=FFD866) ![Meeting](https://img.shields.io/badge/meeting-could%20be%20an%20email-fff?style=flat&logo=googlecalendar&logoColor=FFFFFF&label=meeting&labelColor=5B595C&color=FF6188) ![All Your Base](https://img.shields.io/badge/all%20your%20base-are%20belong%20to%20us-fff?style=flat&logo=retroarch&label=all%20your%20base&labelColor=5B595C&color=5C7CFA) ![Spam Filter](https://img.shields.io/badge/spam%20filter-on%20vacation-fff?style=flat&logo=protonmail&logoColor=FFFFFF&label=spam%20filter&labelColor=5B595C&color=A9DC76) ![Node Modules](https://img.shields.io/badge/node__modules-heavier%20than%20sun-fff?style=flat&logo=nodedotjs&logoColor=FFFFFF&label=node_modules&labelColor=5B595C&color=FFD866) ![TODO](<https://img.shields.io/badge/todo-fix%20later%20(2019)-fff?style=flat&logo=todoist&logoColor=FFFFFF&label=TODO&labelColor=5B595C&color=5C7CFA>) ![Tutorial](https://img.shields.io/badge/tutorial-rest%20of%20the%20owl-fff?style=flat&logo=udemy&logoColor=FFFFFF&label=tutorial&labelColor=5B595C&color=A9DC76) ![Diet](https://img.shields.io/badge/diet-pizza%20powered-fff?style=flat&logo=pizzahut&logoColor=FFFFFF&label=diet&labelColor=5B595C&color=A9DC76)
+![works on my machine](https://img.shields.io/badge/worksonmymachien-on%20my%20machine-fff?style=flat&logo=apple&logoColor=FFFFFF&logoSize=FF6188&label=works&labelColor=5B595C&color=A9DC76) ![Cache](https://img.shields.io/badge/cache-have%20you%20cleared%20it-fff?style=flat&logo=cachet&logoColor=FFFFFF&label=cache&labelColor=5B595C&color=FFD866) ![Meeting](https://img.shields.io/badge/meeting-could%20be%20an%20email-fff?style=flat&logo=googlecalendar&logoColor=FFFFFF&label=meeting&labelColor=5B595C&color=FF6188) ![All Your Base](https://img.shields.io/badge/all%20your%20base-are%20belong%20to%20us-fff?style=flat&logo=retroarch&label=all%20your%20base&labelColor=5B595C&color=5C7CFA) ![Spam Filter](https://img.shields.io/badge/spam%20filter-on%20vacation-fff?style=flat&logo=protonmail&logoColor=FFFFFF&label=spam%20filter&labelColor=5B595C&color=A9DC76) ![Node Modules](https://img.shields.io/badge/node__modules-heavier%20than%20sun-fff?style=flat&logo=nodedotjs&logoColor=FFFFFF&label=node_modules&labelColor=5B595C&color=FFD866) ![Backlog](<https://img.shields.io/badge/backlog-fix%20later%20(2019)-fff?style=flat&logo=todoist&logoColor=FFFFFF&label=backlog&labelColor=5B595C&color=5C7CFA>) ![Tutorial](https://img.shields.io/badge/tutorial-rest%20of%20the%20owl-fff?style=flat&logo=udemy&logoColor=FFFFFF&label=tutorial&labelColor=5B595C&color=A9DC76) ![Diet](https://img.shields.io/badge/diet-pizza%20powered-fff?style=flat&logo=pizzahut&logoColor=FFFFFF&label=diet&labelColor=5B595C&color=A9DC76)
 
 <p align="center">
   <img src="assets/header.svg" width="600" />
@@ -23,35 +23,9 @@ Display banner images at the top of your notes using frontmatter fields.
 
 ## Installation
 
-### Obsidian Community Plugin (pending)
+### Obsidian Community Plugin
 
-This plugin has been submitted for review to the Obsidian community plugin directory. Once approved, you will be able to install it directly from **Settings > Community plugins > Browse** by searching for "Banner Images".
-
-### Using BRAT
-
-You can install this plugin right now using the [BRAT](https://github.com/TfTHacker/obsidian42-brat) plugin:
-
-1. Install BRAT from **Settings > Community plugins > Browse** (search for "BRAT" by TfTHacker)
-2. Open the BRAT settings
-3. Under the **Beta plugins** section, click **Add beta plugin**
-
-   ![BRAT beta plugin list](assets/brat_example_beta_plugin_list.png)
-
-4. In the overlay, enter this plugin's repository: `https://github.com/saltyfireball/obsidian-banner-images` (or just `saltyfireball/obsidian-banner-images`)
-
-   ![BRAT add beta plugin](assets/brat_example_beta_modal.png)
-
-5. Leave the version set to latest
-
-   ![BRAT beta plugin filled](assets/brat_example_beta_modal_filled.png)
-
-6. Click **Add plugin**
-
-### Manual
-
-1. Download the latest release from the [Releases](https://github.com/saltyfireball/obsidian-banner-images/releases) page
-2. Copy `main.js`, `manifest.json`, and `styles.css` into your vault's `.obsidian/plugins/banner-images/` directory
-3. Enable the plugin in **Settings > Community plugins**
+This plugin is available in the official Obsidian community plugin directory. Install it from **Settings > Community plugins > Browse** and search for "Banner Images" or "Banner Images by saltyfireball".
 
 ## Usage
 

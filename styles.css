@@ -44,25 +44,27 @@
 	width: calc(100% + 10px);
 }
 
-/* Source view with banner: make source-view the scroll container */
-.markdown-source-view.bi-has-banner-scroll {
-	overflow-y: auto !important;
-	overflow-x: hidden !important;
+/* Source view with banner: make source-view the scroll container.
+   The doubled class selectors raise specificity high enough to win over
+   CodeMirror's built-in overflow rules without resorting to !important. */
+.markdown-source-view.bi-has-banner-scroll.bi-has-banner-scroll {
+	overflow-y: auto;
+	overflow-x: hidden;
 	display: flex;
 	flex-direction: column;
 }
 
 /* When source view has banner scroll, cm-editor should not be the scroll container */
-.markdown-source-view.bi-has-banner-scroll .cm-editor {
-	overflow: visible !important;
+.markdown-source-view.bi-has-banner-scroll.bi-has-banner-scroll .cm-editor.cm-editor {
+	overflow: visible;
 	flex: 1;
 	min-height: 0;
 }
 
-.markdown-source-view.bi-has-banner-scroll .cm-scroller {
-	overflow-y: visible !important;
-	overflow-x: auto !important;
-	height: auto !important;
+.markdown-source-view.bi-has-banner-scroll.bi-has-banner-scroll .cm-scroller.cm-scroller {
+	overflow-y: visible;
+	overflow-x: auto;
+	height: auto;
 }
 
 /* Mobile: full width banners */
