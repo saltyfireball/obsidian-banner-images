@@ -185,7 +185,7 @@ export default class BannerImagesPlugin extends Plugin {
 		this.active = false;
 		this.unregisterBannerEvents();
 		if (this.renderDebounceTimer) {
-			activeWindow.clearTimeout(this.renderDebounceTimer);
+			window.clearTimeout(this.renderDebounceTimer);
 			this.renderDebounceTimer = null;
 		}
 		// Remove all existing banners and classes
@@ -209,9 +209,9 @@ export default class BannerImagesPlugin extends Plugin {
 			this.pendingRenderAll = true;
 		}
 		if (this.renderDebounceTimer) {
-			activeWindow.clearTimeout(this.renderDebounceTimer);
+			window.clearTimeout(this.renderDebounceTimer);
 		}
-		this.renderDebounceTimer = activeWindow.setTimeout(() => {
+		this.renderDebounceTimer = window.setTimeout(() => {
 			this.renderDebounceTimer = null;
 			if (this.pendingRenderAll) {
 				this.pendingRenderAll = false;
@@ -683,7 +683,7 @@ class BannerSettingTab extends PluginSettingTab {
 		copyBtn.addEventListener("click", () => {
 			void window.navigator.clipboard.writeText(exampleText).then(() => {
 				copyBtn.setText("Copied!");
-				activeWindow.setTimeout(() => copyBtn.setText("Copy"), 2000);
+				window.setTimeout(() => copyBtn.setText("Copy"), 2000);
 			});
 		});
 

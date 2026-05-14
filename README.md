@@ -27,6 +27,8 @@ Display banner images at the top of your notes using frontmatter fields.
 
 This plugin is available in the official Obsidian community plugin directory. Install it from **Settings > Community plugins > Browse** and search for "Banner Images" or "Banner Images by saltyfireball".
 
+Community plugin page: <https://community.obsidian.md/plugins/banner-images>
+
 ## Usage
 
 ### Quick Start
