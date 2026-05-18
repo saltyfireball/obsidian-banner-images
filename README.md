@@ -29,6 +29,10 @@ This plugin is available in the official Obsidian community plugin directory. In
 
 Community plugin page: <https://community.obsidian.md/plugins/banner-images>
 
+## More Plugins by saltyfireball
+
+Browse all of my published Obsidian plugins on my profile: <https://community.obsidian.md/users/saltyfireball>
+
 ## Usage
 
 ### Quick Start
